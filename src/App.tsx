@@ -6,7 +6,6 @@ import { ChatContainer } from './components/Chat/ChatContainer';
 import { InputArea } from './components/Input/InputArea';
 import { useToolSelection } from './hooks/useToolSelection';
 import { useChat } from './hooks/useChat';
-import type { ToolMode } from './types/tool';
 import type { ChatMessage } from './types/chat';
 
 // ProtectedRoute component
