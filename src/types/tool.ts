@@ -1,0 +1,1 @@
+export type ToolMode = 'knowledge' | 'internet' | 'hybrid'; 
