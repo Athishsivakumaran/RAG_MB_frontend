@@ -5,10 +5,9 @@ import { formatTimestamp } from '../../utils/formatters';
 
 interface MessageBubbleProps {
   message: ChatMessage;
-  isLast: boolean;
 }
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLast }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const isUser = message.type === 'user';
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-2`}>

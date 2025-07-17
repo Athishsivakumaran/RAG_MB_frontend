@@ -9,8 +9,8 @@ interface MessageListProps {
 export const MessageList: React.FC<MessageListProps> = ({ messages }) => {
   return (
     <div className="flex flex-col gap-1">
-      {messages.map((msg, idx) => (
-        <MessageBubble key={msg.id} message={msg} isLast={idx === messages.length - 1} />
+      {messages.map((msg) => (
+        <MessageBubble key={msg.id} message={msg} />
       ))}
     </div>
   );

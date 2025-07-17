@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import SignIn from './components/Common/SignIn';
 import { Header } from './components/Header/Header';
 import { ChatContainer } from './components/Chat/ChatContainer';
 import { InputArea } from './components/Input/InputArea';
@@ -7,17 +9,17 @@ import { useChat } from './hooks/useChat';
 import type { ToolMode } from './types/tool';
 import type { ChatMessage } from './types/chat';
 
-const STATIC_RESPONSES: Record<ToolMode, string> = {
-  knowledge: 'This is a static response from the Knowledge Base tool.',
-  internet: 'This is a static response from the Internet tool.',
-  hybrid: 'This is a static response from the Hybrid tool.',
+// ProtectedRoute component
+const ProtectedRoute: React.FC = () => {
+  const token = localStorage.getItem('auth_token');
+  return token ? <Outlet /> : <Navigate to="/signin" replace />;
 };
 
-const App: React.FC = () => {
+const ChatApp: React.FC = () => {
   const { selectedTool, setSelectedTool } = useToolSelection();
   const { messages, addMessage, isTyping, setIsTyping } = useChat();
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -35,7 +37,7 @@ const App: React.FC = () => {
       const aiMsg: ChatMessage = {
         id: Date.now() + '-ai',
         type: 'assistant',
-        content: STATIC_RESPONSES[selectedTool],
+        content: 'This is a static response.',
         timestamp: new Date(),
       };
       addMessage(aiMsg);
@@ -46,7 +48,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header selectedTool={selectedTool} onToolChange={setSelectedTool} />
+      <Header />
       <ChatContainer messages={messages} isTyping={isTyping} />
       <InputArea
         value={input}
@@ -59,5 +61,17 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/signin" element={<SignIn />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<ChatApp />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  </BrowserRouter>
+);
 
 export default App;

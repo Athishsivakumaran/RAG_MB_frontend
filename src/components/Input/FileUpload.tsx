@@ -9,7 +9,7 @@ interface FileUploadProps {
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected, acceptedTypes, maxFileSize, maxFiles }) => {
-  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: acceptedTypes.reduce((acc, type) => ({ ...acc, [`.${type}`]: [] }), {}),
     maxSize: maxFileSize,
     maxFiles,
