@@ -36,7 +36,7 @@ export const ToolDropdown: React.FC<ToolDropdownProps> = ({ selected, onChange }
         aria-expanded={open}
       >
         <SlidersHorizontal className="w-5 h-5" />
-P        <ChevronDown className="w-4 h-4 ml-1" />
+        <ChevronDown className="w-4 h-4 ml-1" />
       </button>
       {open && (
         <div className="absolute bottom-full mb-2 left-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 animate-fade-in">

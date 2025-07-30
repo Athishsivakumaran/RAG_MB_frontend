@@ -20,7 +20,7 @@ const ChatApp: React.FC = () => {
   const [input, setInput] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
     setIsLoading(true);
     const userMsg: ChatMessage = {
@@ -32,17 +32,39 @@ const ChatApp: React.FC = () => {
     addMessage(userMsg);
     setInput('');
     setIsTyping(true);
-    setTimeout(() => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      const res = await fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ question: input, tool: selectedTool }),
+      });
+      if (!res.ok) throw new Error('Failed to get response');
+      const data = await res.json();
+      // Only show the 'answer' field from the response, formatted nicely
       const aiMsg: ChatMessage = {
         id: Date.now() + '-ai',
         type: 'assistant',
-        content: 'This is a static response.',
+        content: data.answer || (typeof data === 'string' ? data : JSON.stringify(data)),
         timestamp: new Date(),
       };
       addMessage(aiMsg);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Error getting response';
+      const aiMsg: ChatMessage = {
+        id: Date.now() + '-ai',
+        type: 'assistant',
+        content: errorMsg,
+        timestamp: new Date(),
+      };
+      addMessage(aiMsg);
+    } finally {
       setIsTyping(false);
       setIsLoading(false);
-    }, 900);
+    }
   };
 
   return (
